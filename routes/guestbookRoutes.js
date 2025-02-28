@@ -1,5 +1,6 @@
 import express from 'express';
 const router = express.Router();
+import path from "path";
 
 let guests = [];
 
@@ -7,27 +8,22 @@ router.get('/', (req, res) => {
     res.send("Welcome to the Guestbook.\n");
 });
 
-router.get('/guestbook', (req, res) => {
-    res.send(
-        `<h1>GuestBook</h1>
-        <form method = "POST" action = "/guestbook">
-        <label for name>Name:</label>
-        <input type = "text" id = "name" name = "name" required ><br></br>
-        <label for = "message">Message:</label>
-        <input type = "text" id = "message" name = "message" required><br></br>
-        <button type = "Submit">Add to Guestbook.</button>
-        </form>`
-    );
+router.get("/guestbook", (req, res) => {
+  res.render("guestbook", {
+    title: "GuestBook Page",
+    message: "Leave your message below",
+    confirm: "Thank you",
+  });
 });
 
 router.post('/guestbook', (req, res) => {
     const {name, message} = req.body;
     if (!name || !message) {
-        return res.status(400).send('Name and message required.');
+      return res.status(400).send('Name and message required.');
     }
 
-    guests.push({name, message});
-    res.send(`Thank you for visiting, ${name}!`);
+    guests.push({ name, message});
+    res.render("thankyou", {title: "Thank You", name, message});
 
   });
 
