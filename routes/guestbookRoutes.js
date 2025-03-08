@@ -1,34 +1,14 @@
 import express from 'express';
 const router = express.Router();
 import path from "path";
+import { getGuestbook, getGuests, getHome, postGuestbook} from "../controllers/userController.js";
 
-let guests = [];
+router.get("/", getHome);
 
-router.get('/', (req, res) => {
-    res.send("Welcome to the Guestbook.\n");
-});
+router.get("/guestbook", getGuestbook);
 
-router.get("/guestbook", (req, res) => {
-  res.render("guestbook", {
-    title: "GuestBook Page",
-    message: "Leave your message below",
-    confirm: "Thank you",
-  });
-});
+router.get("/guests", getGuests);
 
-router.post('/guestbook', (req, res) => {
-    const {name, message} = req.body;
-    if (!name || !message) {
-      return res.status(400).send('Name and message required.');
-    }
-
-    guests.push({ name, message});
-    res.render("thankyou", {title: "Thank You", name, message});
-
-  });
-
-router.get('/guests', (req, res) => {
-    res.json(guests);
-});
+router.post("/guestbook", postGuestbook);
 
 export default router;
