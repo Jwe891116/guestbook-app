@@ -10,19 +10,23 @@ app.set("view engine", "ejs");
 app.set("views", path.join(process.cwd(), "views"));
 
 
-const loggingMiddleware = (req, res, next) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
-  next();
-};
+// const loggingMiddleware = (req, res, next) => {
+//   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+//   next();
+// };
 
-app.use(loggingMiddleware);
+// app.use(loggingMiddleware);
 
 app.use('/', guestbookRoutes);
 
-app.use((req, res) => {
-     res.status(404).send('Oops! The page you are looking for does not exist.');
-});
+// app.use((req, res) => {
+//      res.status(404).send('Oops! The page you are looking for does not exist.');
+// });
 
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Oops! The page you are looking for does not exist.');
+});
 
 app.use((req, res, next) => {
   const timestamp= new Date().toISOString();
@@ -30,7 +34,7 @@ app.use((req, res, next) => {
   next();
 });
 
-const PORT = 3001;
+const PORT = 3000;
 
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}/`);
